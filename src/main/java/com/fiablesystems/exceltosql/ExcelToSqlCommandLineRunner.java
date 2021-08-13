@@ -8,8 +8,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ResourceUtils;
 
 import javax.sql.DataSource;
+import java.io.File;
 import java.util.Set;
 
 @Component
@@ -20,7 +22,7 @@ public class ExcelToSqlCommandLineRunner implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        String file="C:\\thiyagu_data\\coding\\TestXls.xlsx";
+        File file = ResourceUtils.getFile("classpath:TestXls.xlsx");
         ExcelReader excelReader=new ExcelReader();
 
        ExcelData excelData= excelReader.loadExcelFile(file);

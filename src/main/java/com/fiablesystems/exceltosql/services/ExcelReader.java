@@ -7,21 +7,21 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import java.io.File;
 import java.io.FileInputStream;
-import java.nio.file.Paths;
 import java.util.*;
 
 public class ExcelReader {
 
-    public ExcelData loadExcelFile(String fileName) {
+    public ExcelData loadExcelFile(File file) {
         try {
-            XSSFWorkbook wb = new XSSFWorkbook(new FileInputStream(Paths.get(fileName).toFile()));
-            List<String> sheetNames=getSheetNames(wb);
-            List<ExcelSheet> excelSheetList=new ArrayList<>();
-            for(String sheet:sheetNames){
+            XSSFWorkbook wb = new XSSFWorkbook(new FileInputStream(file));
+            List<String> sheetNames = getSheetNames(wb);
+            List<ExcelSheet> excelSheetList = new ArrayList<>();
+            for (String sheet : sheetNames) {
                 excelSheetList.add(collectDataFromSheet(wb.getSheet(sheet)));
             }
-            ExcelData excelData = new ExcelData(fileName, excelSheetList);
+            ExcelData excelData = new ExcelData(file.getName(), excelSheetList);
             return excelData;
         } catch (Exception e) {
             e.printStackTrace();
@@ -42,20 +42,20 @@ public class ExcelReader {
         return map;
     }
 
-    public List<String> getSheetNames(XSSFWorkbook xssfWorkbook){
-        List<String> sheetNames=new ArrayList<>();
-        int noOfSheet=xssfWorkbook.getNumberOfSheets();
-        for(int i=0;i<noOfSheet;i++){
+    public List<String> getSheetNames(XSSFWorkbook xssfWorkbook) {
+        List<String> sheetNames = new ArrayList<>();
+        int noOfSheet = xssfWorkbook.getNumberOfSheets();
+        for (int i = 0; i < noOfSheet; i++) {
             sheetNames.add(xssfWorkbook.getSheetName(i));
         }
         return sheetNames;
 
     }
 
-    public ExcelSheet collectDataFromSheet(Sheet sheet){
+    public ExcelSheet collectDataFromSheet(Sheet sheet) {
         Map<Integer, String> cellIndexMap = new HashMap<>();
         Map<String, List<Object>> rowColumnData = extractHeaders(sheet.getRow(0), cellIndexMap);
-        int lastRow=sheet.getLastRowNum();
+        int lastRow = sheet.getLastRowNum();
 
         Iterator<Row> rows = sheet.iterator();
         long i = 0;
@@ -75,7 +75,7 @@ public class ExcelReader {
             i++;
 
         }
-        return new ExcelSheet(sheet.getSheetName(),rowColumnData, lastRow);
+        return new ExcelSheet(sheet.getSheetName(), rowColumnData, lastRow);
     }
 
 }
